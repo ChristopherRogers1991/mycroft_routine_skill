@@ -3,6 +3,7 @@ from mycroft.skills.core import MycroftSkill, intent_handler
 from mycroft.util.log import getLogger
 from websocket import create_connection
 import json
+from os.path import join, dirname, abspath
 
 
 __author__ = 'ChristopherRogers1991'
@@ -36,6 +37,17 @@ class MycroftRoutineSkill(MycroftSkill):
         self._routines = self._load_routine_data()
         self._register_routines()
 
+        path = dirname(abspath(__file__))
+        path_to_stop_words = join(path, 'vocab', self.lang, 'ThatsAll.voc')
+        self._stop_words = self._lines_from_path(path_to_stop_words)
+        path_to_cancel_words = join(path, 'vocab', self.lang, 'Cancel.voc')
+        self._cancel_words = self._lines_from_path(path_to_cancel_words)
+
+    def _lines_from_path(self, path):
+        with open(path, 'r') as file:
+            lines = [line.strip().lower() for line in file]
+            return lines
+
     def _load_routine_data(self):
         try:
             with self.file_system.open(ROUTINES_FILENAME, 'r') as conf_file:
@@ -63,28 +75,53 @@ class MycroftRoutineSkill(MycroftSkill):
     @intent_handler(IntentBuilder("").require("Create").require("Routine"))
     def _create_routine(self, message):
         name = self.get_response("name.it").lower()
-        if name == "cancel":
+        if name in self._cancel_words:
             return
         first_task = self.get_response("first.task")
-        if first_task == "cancel":
+        if first_task in self._cancel_words:
             return
         tasks = [first_task]
         while True:
             task = self.get_response("next").lower()
-            if task == "cancel":
+            if not task or task in self._cancel_words:
                 return
-            if task == "that's all" or task == "that's it":
+            if task in self._stop_words:
                 break
             tasks.append(task)
         self._routines[name] = tasks
         self._write_routine_data()
         self._register_routine(name)
+        self.speak_dialog('created', data={"name": name})
 
     @intent_handler(IntentBuilder("").optionally("Run").require("RoutineName"))
     def _run_routine(self, message):
         name = message.data["RoutineName"]
         for task in self._routines[name]:
             send_message(task)
+
+    @intent_handler(IntentBuilder("").require("List").require("Routines"))
+    def _list_routines(self, message):
+        if not self._routines:
+            self.speak_dialog('no.routines')
+            return
+        routines = ". ".join(self._routines.keys())
+        self.speak_dialog('list.routines')
+        self.speak(routines)
+
+    @intent_handler(IntentBuilder("").require("Delete").require("RoutineName"))
+    def _delete_routine(self, message):
+        name = message.data["RoutineName"]
+        del(self._routines[name])
+        self._write_routine_data()
+        self.speak_dialog('deleted', data={"name": name})
+
+    @intent_handler(IntentBuilder("").require("Describe").require("RoutineName"))
+    def _describe_routine(self, message):
+        name = message.data["RoutineName"]
+        tasks = ". ".join(self._routines[name])
+        self.speak_dialog('describe', data={"name": name})
+        self.speak(tasks)
+
 
 
 def create_skill():
