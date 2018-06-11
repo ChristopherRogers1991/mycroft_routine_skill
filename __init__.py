@@ -72,7 +72,7 @@ class MycroftRoutineSkill(MycroftSkill):
         with self.file_system.open(ROUTINES_FILENAME, 'w') as conf_file:
             conf_file.write(json.dumps(self._routines))
 
-    @intent_handler(IntentBuilder("").require("Create").require("Routine"))
+    @intent_handler(IntentBuilder("CreateRoutine").require("Create").require("Routine"))
     def _create_routine(self, message):
         name = self.get_response("name.it").lower()
         if name in self._cancel_words:
@@ -93,13 +93,13 @@ class MycroftRoutineSkill(MycroftSkill):
         self._register_routine(name)
         self.speak_dialog('created', data={"name": name})
 
-    @intent_handler(IntentBuilder("").optionally("Run").require("RoutineName"))
+    @intent_handler(IntentBuilder("RunRoutine").optionally("Run").require("RoutineName"))
     def _run_routine(self, message):
         name = message.data["RoutineName"]
         for task in self._routines[name]:
             send_message(task)
 
-    @intent_handler(IntentBuilder("").require("List").require("Routines"))
+    @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
     def _list_routines(self, message):
         if not self._routines:
             self.speak_dialog('no.routines')
@@ -108,14 +108,14 @@ class MycroftRoutineSkill(MycroftSkill):
         self.speak_dialog('list.routines')
         self.speak(routines)
 
-    @intent_handler(IntentBuilder("").require("Delete").require("RoutineName"))
+    @intent_handler(IntentBuilder("DeleteRoutine").require("Delete").require("RoutineName"))
     def _delete_routine(self, message):
         name = message.data["RoutineName"]
         del(self._routines[name])
         self._write_routine_data()
         self.speak_dialog('deleted', data={"name": name})
 
-    @intent_handler(IntentBuilder("").require("Describe").require("RoutineName"))
+    @intent_handler(IntentBuilder("DescribeRoutine").require("Describe").require("RoutineName"))
     def _describe_routine(self, message):
         name = message.data["RoutineName"]
         tasks = ". ".join(self._routines[name])
