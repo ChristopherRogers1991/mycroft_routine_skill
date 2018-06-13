@@ -1,0 +1,8 @@
+{
+  "utterance": "Create a new routine",
+  "intent_type": "CreateRoutine",
+  "intent": {
+    "Create": "Create",
+    "Routine": "routine"
+  }
+}
