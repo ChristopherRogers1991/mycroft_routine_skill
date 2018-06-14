@@ -100,7 +100,10 @@ class MycroftRoutineSkill(MycroftSkill):
 
     @intent_handler(IntentBuilder("CreateRoutine").require("Create").require("Routine"))
     def _create_routine(self, message):
-        name = self.get_response("name.it").lower()
+        name = self.get_response("name.it")
+        if not name:
+            return
+        name = name.lower()
         if name in self._cancel_words:
             return
 
@@ -116,12 +119,18 @@ class MycroftRoutineSkill(MycroftSkill):
 
     def _get_task_list(self):
         first_task = self.get_response("first.task")
+        if not first_task:
+            return []
+        first_task = first_task.lower()
         if first_task in self._cancel_words:
             return []
         tasks = [first_task]
         while True:
-            task = self.get_response("next").lower()
-            if not task or task in self._cancel_words:
+            task = self.get_response("next")
+            if not task:
+                return []
+            task = task.lower()
+            if task in self._cancel_words:
                 return []
             if task in self._stop_words:
                 break
@@ -190,7 +199,10 @@ class MycroftRoutineSkill(MycroftSkill):
 
     def _get_days(self):
         days_to_run = []
-        days_from_user = self.get_response('which.days').lower()
+        days_from_user = self.get_response('which.days')
+        if not days_from_user:
+            return
+        days_from_user = days_from_user.lower()
         for i in range(len(self._days_of_week)):
             if self._days_of_week[i] in days_from_user:
                 days_to_run.append(str(i))
@@ -198,7 +210,10 @@ class MycroftRoutineSkill(MycroftSkill):
 
     def _get_time(self):
         regex = '(?P<hour>[0-9]{1,2})[: ](?P<minute>[0-9]{1,2}) (?P<time_of_day>[ap].?m.?)'
-        time_from_user = self.get_response('what.time').lower()
+        time_from_user = self.get_response('what.time')
+        if not time_from_user:
+            return
+        time_from_user = time_from_user.lower()
         matches = re.match(regex, time_from_user)
 
         if not matches:
