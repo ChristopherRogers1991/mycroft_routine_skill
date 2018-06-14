@@ -4,40 +4,47 @@ Create, run, and schedule lists of Mycroft commands
 ## Description 
 Create named rountines, which are lists of Mycroft commands, that can be run by name, and scheduled to run at particular times.
 
-## Examples 
-* *User:*    "Create routine"
-  *Mycroft:* "What would you like to name it?"
-  *User:*    "Morning"
-  *Mycroft:* "What is the first task?"
-  *User:*    "Turn on the lights."
-  *Mycroft:* "What next?"
-  *User:*    "Say time to get up."
-  *Mycroft:* "What next?"
-  *User:*    "Tell me the time."
-  *Mycroft:* "What next?"
-  *User:*    "Tell me the weather."
-  *Mycroft:* "What next?"
-  *User:*    "That's all."
-  *Mycroft:* "Morning has been created"
-  
-* *User:*    "Schedule routine morning"
-  *Mycroft:* "Which days of the week would you like it to run?"
-  *User:*    "Monday Tuesday Wednesday Thursday Friday"
-  *Mycroft:* "At what time?"
-  *User:*    "7:45 a.m."
-  *Mycroft:* "Morning has been schedule"
+## Examples
 
-* "Run routine morning"
-* "List routines"
-* "Describe routine morning"
-* "Disable morning routine"
-* "Enable morning routine"
-* "Delete morning routine"
+### Create a routine
+    *User:*    "Create routine"
+    *Mycroft:* "What would you like to name it?"
+    *User:*    "Morning"
+    *Mycroft:* "What is the first task?"
+    *User:*    "Turn on the lights."
+    *Mycroft:* "What next?"
+    *User:*    "Say time to get up."
+    *Mycroft:* "What next?"
+    *User:*    "Tell me the time."
+    *Mycroft:* "What next?"
+    *User:*    "Tell me the weather."
+    *Mycroft:* "What next?"
+    *User:*    "That's all."
+    *Mycroft:* "Morning has been created"
+    
+### Schedule a routine
+    *User:*    "Schedule routine morning"
+    *Mycroft:* "Which days of the week would you like it to run?"
+    *User:*    "Monday Tuesday Wednesday Thursday Friday"
+    *Mycroft:* "At what time?"
+    *User:*    "7:45 a.m."
+    *Mycroft:* "Morning has been schedule"
+
+### Simple commands
+
+* Run routine morning
+* List routines
+* Describe routine morning
+* Disable morning routine
+* Enable morning routine
+* Delete morning routine
 
 ## Credits 
 * @ChristopherRogers1991
 
 ## Short Demo
+
+https://youtu.be/71RwUTnGJbI
 
 ## Instalation
 
