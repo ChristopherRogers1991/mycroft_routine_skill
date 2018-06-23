@@ -2,7 +2,8 @@
   "utterance": "Create a new routine",
   "intent_type": "CreateRoutine",
   "intent": {
-    "Create": "Create",
+    "Create": "create",
     "Routine": "routine"
-  }
+  },
+  "responses": ["morning routine", "weather", "show time", "that is all"]
 }

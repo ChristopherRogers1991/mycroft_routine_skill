@@ -1,0 +1,8 @@
+{
+  "utterance": "list my routines",
+  "intent_type": "ListRoutine",
+  "intent": {
+    "List": "list",
+    "Routines": "routines"
+  }
+}
