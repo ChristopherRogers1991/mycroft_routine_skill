@@ -80,7 +80,7 @@ class MycroftRoutineSkill(MycroftSkill):
                        self._handle_completed_event)
 
     def _handle_completed_event(self, message):
-        task_id = message.context.get("source")
+        task_id = message.context.get("task_id")
         with self._in_progress_tasks_lock:
             if task_id not in self._in_progress_tasks:
                 return
@@ -108,7 +108,7 @@ class MycroftRoutineSkill(MycroftSkill):
         self.bus.emit(Message(
             msg_type="recognizer_loop:utterance",
             data={"utterances": [message]},
-            context={"source": task_id}
+            context={"task_id": task_id}
         ))
         return task_id
 
