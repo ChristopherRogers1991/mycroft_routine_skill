@@ -2,10 +2,14 @@ from adapt.intent import IntentBuilder
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from collections import defaultdict
+from enum import Enum
+from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill, intent_handler
 from mycroft.util.log import getLogger
 from os.path import join, dirname, abspath
-from websocket import create_connection
+from threading import Lock
+from time import sleep, time
+from uuid import uuid4 as uuid
 import json
 import re
 
@@ -16,26 +20,40 @@ LOGGER = getLogger(__name__)
 URL_TEMPLATE = "{scheme}://{host}:{port}{path}"
 ROUTINES_FILENAME = "routines.json"
 
-def send_message(message, host="localhost",
-                 port=8181, path="/core", scheme="ws"):
-    payload = json.dumps({
-        "type": "recognizer_loop:utterance",
-        "context": "",
-        "data": {
-            "utterances": [message]
-        }
-    })
-    url = URL_TEMPLATE.format(scheme=scheme, host=host,
-                              port=str(port), path=path)
-    ws = create_connection(url)
-    ws.send(payload)
-    ws.close()
+TIMEOUT_IN_SECONDS = 30
+
+
+class _TaskStatus(Enum):
+    RUNNING = 0
+    FINISHED = 1
+
+
+class _Task():
+
+    def __init__(self, id):
+        self._id = id
+        self._status = _TaskStatus.RUNNING
+        self._start_time = time()
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def mark_finished(self):
+        self._status = _TaskStatus.FINISHED
+
+    def is_done(self):
+        return self._status == _TaskStatus.FINISHED
+
+    def is_stale(self):
+        return self._start_time + TIMEOUT_IN_SECONDS + 1 < time()
 
 
 class MycroftRoutineSkill(MycroftSkill):
 
     def __init__(self):
         super(MycroftRoutineSkill, self).__init__(name="MycroftRoutineSkill")
+        self._in_progress_tasks = dict()
+        self._in_progress_tasks_lock = Lock()
 
     def initialize(self):
         self.scheduler = BackgroundScheduler()
@@ -58,7 +76,41 @@ class MycroftRoutineSkill(MycroftSkill):
         path_to_days_of_week = join(path, 'vocab', self.lang, 'DaysOfWeek.voc')
         self._days_of_week = self._lines_from_path(path_to_days_of_week)
 
+        self.add_event("mycroft.skill.handler.complete",
+                       self._handle_completed_event)
 
+    def _handle_completed_event(self, message):
+        task_id = message.context.get("task_id")
+        with self._in_progress_tasks_lock:
+            if task_id not in self._in_progress_tasks:
+                return
+            LOGGER.info(task_id + " completed.")
+            self._in_progress_tasks[task_id].mark_finished()
+
+    def _await_completion_of_task(self, task_id):
+        LOGGER.info("Waiting for " + task_id)
+        start = time()
+        while start + TIMEOUT_IN_SECONDS > time():
+            with self._in_progress_tasks_lock:
+                try:
+                    if self._in_progress_tasks[task_id].is_done():
+                        del(self._in_progress_tasks[task_id])
+                        return
+                except KeyError:
+                    sleep(0.1)
+        LOGGER.warn("Timed out wating for {task}".format(task=task_id))
+        del(self._in_progress_tasks[task_id])
+
+    def send_message(self, message: str):
+        task_id = "{name}.{uuid}".format(name=self.name, uuid=uuid())
+        with self._in_progress_tasks_lock:
+            self._in_progress_tasks[task_id] = _Task(task_id)
+        self.bus.emit(Message(
+            msg_type="recognizer_loop:utterance",
+            data={"utterances": [message]},
+            context={"task_id": task_id}
+        ))
+        return task_id
 
     def _lines_from_path(self, path):
         with open(path, 'r') as file:
@@ -144,7 +196,8 @@ class MycroftRoutineSkill(MycroftSkill):
 
     def _run_routine(self, name):
         for task in self._routines[name]['tasks']:
-            send_message(task)
+            task_id = self.send_message(task)
+            self._await_completion_of_task(task_id)
 
     @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
     def _list_routines(self, message):
