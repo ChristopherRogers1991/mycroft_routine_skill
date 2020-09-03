@@ -39,6 +39,10 @@ Create named rountines, which are lists of Mycroft commands, that can be run by 
 * Enable morning routine
 * Delete morning routine
 
+### Notes
+
+**Do not put the name of the routine into one of the commands**. For example, if you create a routine called 'morning,' do not have 'say good morning' as one of the commands. Mycroft may pickup on the name of the routine, and try to run it over again, ultimately creating an infinite loop where the routine continually triggers itself.
+
 ## Credits 
 * @ChristopherRogers1991
 * @gras64 (German translation)
