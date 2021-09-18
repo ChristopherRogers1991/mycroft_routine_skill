@@ -206,9 +206,8 @@ class MycroftRoutineSkill(MycroftSkill):
     @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
     def _list_routines(self, message):
         self.gui.clear()
-        self.gui['testvar'] = "Their docs are terrible"
+        self.gui['routinesModel'] = ["1","2","3"]
         self.gui.show_page("ui.qml")
-        # self.gui.show_text("these guys suck")
         if not self._routines:
             self.speak_dialog('no.routines')
             return
