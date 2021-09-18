@@ -7,6 +7,7 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill, intent_handler
 from mycroft.util.log import getLogger
 from os.path import join, dirname, abspath
+from pathlib import Path
 from threading import Lock
 from time import sleep, time
 from uuid import uuid4 as uuid
@@ -54,6 +55,7 @@ class MycroftRoutineSkill(MycroftSkill):
         super(MycroftRoutineSkill, self).__init__(name="MycroftRoutineSkill")
         self._in_progress_tasks = dict()
         self._in_progress_tasks_lock = Lock()
+        self.gui_image_directory = Path(self.root_dir).joinpath("ui")
 
     def initialize(self):
         self.scheduler = BackgroundScheduler()
@@ -78,6 +80,8 @@ class MycroftRoutineSkill(MycroftSkill):
 
         self.add_event("mycroft.skill.handler.complete",
                        self._handle_completed_event)
+        self.gui.register_handler("skill.mycroft_routine_skill.button_clicked",
+                                  self._handle_button_click)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
@@ -201,12 +205,19 @@ class MycroftRoutineSkill(MycroftSkill):
 
     @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
     def _list_routines(self, message):
+        self.gui.clear()
+        self.gui['testvar'] = "Their docs are terrible"
+        self.gui.show_page("ui.qml")
+        # self.gui.show_text("these guys suck")
         if not self._routines:
             self.speak_dialog('no.routines')
             return
         routines = ". ".join(self._routines.keys())
         self.speak_dialog('list.routines')
         self.speak(routines)
+
+    def _handle_button_click(self, message):
+        self.gui['testvar'] = "Button was clicked!"
 
     @intent_handler(IntentBuilder("DeleteRoutine").require("Delete").require("RoutineName"))
     def _delete_routine(self, message):
