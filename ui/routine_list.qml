@@ -25,7 +25,7 @@ Mycroft.ScrollableDelegate{
                 }
                 text: modelData
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.button_clicked", {"RoutineName": modelData})
+                    triggerGuiEvent("skill.mycroft_routine_skill.run_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
             Button {
@@ -36,7 +36,7 @@ Mycroft.ScrollableDelegate{
                 }
                 text: "Edit"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.button_clicked", {"RoutineName": modelData})
+                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
         }

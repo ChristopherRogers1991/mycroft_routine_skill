@@ -79,8 +79,10 @@ class MycroftRoutineSkill(MycroftSkill):
 
         self.add_event("mycroft.skill.handler.complete",
                        self._handle_completed_event)
-        self.gui.register_handler("skill.mycroft_routine_skill.button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.run_routine_button_clicked",
                                   self._trigger_routine)
+        self.gui.register_handler("skill.mycroft_routine_skill.edit_routine_button_clicked",
+                                  self._edit_routine)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
@@ -192,6 +194,12 @@ class MycroftRoutineSkill(MycroftSkill):
             tasks.append(task)
         return tasks
 
+    def _edit_routine(self, message):
+        name = message.data["RoutineName"]
+        self.gui.clear()
+        self.gui['routineModel'] = self._routines.get(name.lower())
+        self.gui.show_page("edit_routine.qml")
+
     @intent_handler(IntentBuilder("RunRoutine").optionally("Run").require("RoutineName"))
     def _trigger_routine(self, message):
         name = message.data["RoutineName"]
@@ -210,7 +218,7 @@ class MycroftRoutineSkill(MycroftSkill):
         routines = ". ".join(self._routines.keys())
         self.gui.clear()
         self.gui['routinesModel'] = [routine.title() for routine in self._routines.keys()]
-        self.gui.show_page("ui.qml")
+        self.gui.show_page("routine_list.qml")
         self.speak_dialog('list.routines')
         self.speak(routines)
 
