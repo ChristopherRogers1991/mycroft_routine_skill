@@ -13,15 +13,28 @@ Mycroft.ScrollableDelegate{
         spacing: 20
         anchors.fill: parent
         anchors.topMargin: 100
-        delegate: ColumnLayout {
+        delegate: RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: Math.min(400, parent.width * 0.5)
+            width: Math.min(600, parent.width * 0.8)
             Button {
-                anchors.fill: parent
+                anchors.right: edit.left
+                anchors.left: parent.left
+                anchors.rightMargin: 10
                 palette {
                     button: "white"
                 }
                 text: modelData
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.button_clicked", {"RoutineName": modelData})
+                }
+            }
+            Button {
+                id: edit
+                anchors.right: parent.right
+                palette {
+                    button: "white"
+                }
+                text: "Edit"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.button_clicked", {"RoutineName": modelData})
                 }
