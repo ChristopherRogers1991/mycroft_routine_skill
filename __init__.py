@@ -18,7 +18,6 @@ import re
 __author__ = 'ChristopherRogers1991'
 
 LOGGER = getLogger(__name__)
-URL_TEMPLATE = "{scheme}://{host}:{port}{path}"
 ROUTINES_FILENAME = "routines.json"
 
 TIMEOUT_IN_SECONDS = 30
@@ -81,7 +80,7 @@ class MycroftRoutineSkill(MycroftSkill):
         self.add_event("mycroft.skill.handler.complete",
                        self._handle_completed_event)
         self.gui.register_handler("skill.mycroft_routine_skill.button_clicked",
-                                  self._handle_button_click)
+                                  self._trigger_routine)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
@@ -199,24 +198,21 @@ class MycroftRoutineSkill(MycroftSkill):
         self._run_routine(name)
 
     def _run_routine(self, name):
-        for task in self._routines[name]['tasks']:
+        for task in self._routines[name.lower()]['tasks']:
             task_id = self.send_message(task)
             self._await_completion_of_task(task_id)
 
     @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
     def _list_routines(self, message):
-        self.gui.clear()
-        self.gui['routinesModel'] = ["1","2","3"]
-        self.gui.show_page("ui.qml")
         if not self._routines:
             self.speak_dialog('no.routines')
             return
         routines = ". ".join(self._routines.keys())
+        self.gui.clear()
+        self.gui['routinesModel'] = [routine.title() for routine in self._routines.keys()]
+        self.gui.show_page("ui.qml")
         self.speak_dialog('list.routines')
         self.speak(routines)
-
-    def _handle_button_click(self, message):
-        self.gui['testvar'] = "Button was clicked!"
 
     @intent_handler(IntentBuilder("DeleteRoutine").require("Delete").require("RoutineName"))
     def _delete_routine(self, message):
