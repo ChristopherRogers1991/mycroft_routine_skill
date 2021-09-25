@@ -204,9 +204,17 @@ class MycroftRoutineSkill(MycroftSkill):
         self.gui.show_page("edit_routine.qml")
 
     def _edit_task(self, message):
-        routine = message.data["Routine"]
+        new_task = self.get_response()
+        if not new_task:
+            return
+        routine = message.data["Routine"].lower()
         task = message.data["Task"]
-        self.speak("Edit task: " + str(task.get("index")) + task.get("name") + "of routine " + routine)
+        index = task["index"]
+        self.gui["routineModel"][index] = json.dumps({"index": index, "name": new_task})
+        self.gui.show_page("edit_routine.qml")
+        self._routines[routine]['tasks'][index] = new_task
+        self._write_routine_data()
+        
 
     @intent_handler(IntentBuilder("RunRoutine").optionally("Run").require("RoutineName"))
     def _trigger_routine(self, message):

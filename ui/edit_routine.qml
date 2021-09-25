@@ -35,7 +35,8 @@ Mycroft.ScrollableDelegate{
                 }
                 text: "Edit"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked", {"Routine": routineName, "Task": task})
+                    triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked",
+                    {"Routine": routineName, "Task": task})
                 }
             }
         }
