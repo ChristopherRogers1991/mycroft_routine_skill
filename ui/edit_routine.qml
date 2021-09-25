@@ -7,22 +7,22 @@ import Mycroft 1.0 as Mycroft
 Mycroft.ScrollableDelegate{
     id: root
     property var routineName: sessionData.routineName
-    property var routineModel: sessionData.routineModel
+    property var tasks: JSON.parse(sessionData.tasks)
     ListView {
         id: list
-        model: routineModel
+        model: tasks
         spacing: 20
         anchors.fill: parent
         anchors.topMargin: 100
         delegate: RowLayout {
-            property var task: JSON.parse(modelData)
+            property var task: modelData
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(600, parent.width * 0.8)
             Text {
                 anchors.right: edit.left
                 anchors.left: parent.left
                 anchors.rightMargin: 10
-                text: task.name
+                text: task
                 font.pointSize: 20
                 font.bold: true
                 color: "white"
@@ -36,7 +36,7 @@ Mycroft.ScrollableDelegate{
                 text: "Edit"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked",
-                    {"Routine": routineName, "Task": task})
+                    {"RoutineName": routineName, "TaskIndex": list.currentIndex})
                 }
             }
         }

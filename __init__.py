@@ -226,19 +226,18 @@ class MycroftRoutineSkill(MycroftSkill):
         routine_name = message.data["RoutineName"].lower()
         self.gui.clear()
         self.gui["routineName"] = routine_name
-        self.gui['routineModel'] = [json.dumps({"index": i, "name": name}) for i, name in enumerate(self._routines.get(routine_name).tasks)]
+        self.gui['tasks'] = json.dumps(self._routines[routine_name].tasks)
         self.gui.show_page("edit_routine.qml")
 
     def _edit_task(self, message):
         new_task = self.get_response()
         if not new_task:
             return
-        routine_name = message.data["Routine"].lower()
-        task = message.data["Task"]
-        index = task["index"]
-        self.gui["routineModel"][index] = json.dumps({"index": index, "name": new_task})
+        routine_name = message.data["RoutineName"].lower()
+        task_index = message.data["TaskIndex"]
+        self._routines[routine_name].tasks[task_index] = new_task
+        self.gui['tasks'] = json.dumps(self._routines[routine_name].tasks)
         self.gui.show_page("edit_routine.qml")
-        self._routines[routine_name].tasks[index] = new_task
         self._write_routine_data()
         
 
