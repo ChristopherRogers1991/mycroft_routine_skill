@@ -9,6 +9,7 @@ from mycroft.util.log import getLogger
 from os.path import join, dirname, abspath
 from pathlib import Path
 from threading import Lock
+from typing import Dict, List
 from time import sleep, time
 from uuid import uuid4 as uuid
 import json
@@ -19,6 +20,7 @@ __author__ = 'ChristopherRogers1991'
 
 LOGGER = getLogger(__name__)
 ROUTINES_FILENAME = "routines.json"
+ROUTINES_V2_FILENAME = "routines2.json"
 
 TIMEOUT_IN_SECONDS = 30
 
@@ -47,6 +49,22 @@ class _Task():
     def is_stale(self):
         return self._start_time + TIMEOUT_IN_SECONDS + 1 < time()
 
+class _Routine():
+
+    def __init__(self,
+                name: str,
+                tasks: List[str],
+                schedule: str=None,
+                enabled: bool=True) -> None:
+        self.name = name
+        self.tasks = tasks
+        self.schedule = schedule
+        self.enabled = enabled
+
+    @classmethod
+    def from_json(cls, json_string: str):
+        return cls(**json.loads(json_string))
+
 
 class MycroftRoutineSkill(MycroftSkill):
 
@@ -60,8 +78,7 @@ class MycroftRoutineSkill(MycroftSkill):
         self.scheduler = BackgroundScheduler()
         self.scheduler.start()
 
-        self._routines = defaultdict(dict)
-        self._routines.update(self._load_routine_data())
+        self._routines = self._load_routine_data()
 
         self._routine_to_sched_id_map = {}
         self._register_routines()
@@ -124,28 +141,35 @@ class MycroftRoutineSkill(MycroftSkill):
             lines = [line.strip().lower() for line in file]
             return lines
 
-    def _load_routine_data(self):
+    def _load_routine_data(self) -> Dict[str, _Routine]:
         try:
-            with self.file_system.open(ROUTINES_FILENAME, 'r') as conf_file:
-                return json.loads(conf_file.read())
+            with self.file_system.open(ROUTINES_V2_FILENAME, 'r') as conf_file:
+                routines = json.loads(conf_file.read())
+                routines = [_Routine(**routine) for routine in routines]
+                return {routine.name: routine for routine in routines}
         except FileNotFoundError:
-            log_message = "Routines file not found."
+            try:
+                with self.file_system.open(ROUTINES_FILENAME, 'r') as conf_file:
+                    routines = json.loads(conf_file.read())
+                    return {name: _Routine(name, **routine) for name, routine in routines.items()}
+            except FileNotFoundError:
+                log_message = "Routines file not found."
         except PermissionError:
             log_message = "Permission denied when reading routines file."
         except json.decoder.JSONDecodeError:
             log_message = "Error decoding json from routines file."
-        log_message += " Initializing empty dictionary."
+        log_message += " Initializing empty dict."
+        LOGGER.warn(log_message)
         return {}
 
     def _register_routines(self):
-        for routine in self._routines:
+        for routine in self._routines.values():
             self._register_routine(routine)
 
-    def _register_routine(self, name):
-        self.register_vocabulary(name, "RoutineName")
-        schedule = self._routines[name].get('schedule')
-        if schedule and self._routines.get('enabled', True):
-            self._schedule_routine(name, schedule)
+    def _register_routine(self, routine: _Routine):
+        self.register_vocabulary(routine.name, "RoutineName")
+        if routine.schedule and routine.enabled:
+            self._schedule_routine(routine.name, routine.schedule)
 
     def _schedule_routine(self, name, cronstring):
         trigger = CronTrigger.from_crontab(cronstring)
@@ -154,8 +178,9 @@ class MycroftRoutineSkill(MycroftSkill):
         self._routine_to_sched_id_map[name] = job.id
 
     def _write_routine_data(self):
-        with self.file_system.open(ROUTINES_FILENAME, 'w') as conf_file:
-            conf_file.write(json.dumps(self._routines, indent=4))
+        with self.file_system.open(ROUTINES_V2_FILENAME, 'w') as conf_file:
+            routines = [routine.__dict__ for routine in self._routines.values()]
+            conf_file.write(json.dumps(routines, indent=4))
 
     @intent_handler(IntentBuilder("CreateRoutine").require("Create").require("Routine"))
     def _create_routine(self, message):
@@ -170,10 +195,11 @@ class MycroftRoutineSkill(MycroftSkill):
         if not tasks:
             return
 
-        self._routines[name]['tasks'] = tasks
+        new_routine = _Routine(name, tasks)
+        self._routines[name] = new_routine
 
         self._write_routine_data()
-        self._register_routine(name)
+        self._register_routine(new_routine)
         self.speak_dialog('created', data={"name": name})
 
     def _get_task_list(self):
@@ -197,22 +223,22 @@ class MycroftRoutineSkill(MycroftSkill):
         return tasks
 
     def _edit_routine(self, message):
-        routine_name = message.data["RoutineName"]
+        routine_name = message.data["RoutineName"].lower()
         self.gui.clear()
         self.gui["routineName"] = routine_name
-        self.gui['routineModel'] = [json.dumps({"index": i, "name": name}) for i, name in enumerate(self._routines.get(routine_name.lower())["tasks"])]
+        self.gui['routineModel'] = [json.dumps({"index": i, "name": name}) for i, name in enumerate(self._routines.get(routine_name).tasks)]
         self.gui.show_page("edit_routine.qml")
 
     def _edit_task(self, message):
         new_task = self.get_response()
         if not new_task:
             return
-        routine = message.data["Routine"].lower()
+        routine_name = message.data["Routine"].lower()
         task = message.data["Task"]
         index = task["index"]
         self.gui["routineModel"][index] = json.dumps({"index": index, "name": new_task})
         self.gui.show_page("edit_routine.qml")
-        self._routines[routine]['tasks'][index] = new_task
+        self._routines[routine_name].tasks[index] = new_task
         self._write_routine_data()
         
 
@@ -222,7 +248,7 @@ class MycroftRoutineSkill(MycroftSkill):
         self._run_routine(name)
 
     def _run_routine(self, name):
-        for task in self._routines[name.lower()]['tasks']:
+        for task in self._routines[name.lower()].tasks:
             task_id = self.send_message(task)
             self._await_completion_of_task(task_id)
 
@@ -248,7 +274,7 @@ class MycroftRoutineSkill(MycroftSkill):
     @intent_handler(IntentBuilder("DescribeRoutine").require("Describe").require("RoutineName"))
     def _describe_routine(self, message):
         name = message.data["RoutineName"]
-        tasks = ". ".join(self._routines[name]['tasks'])
+        tasks = ". ".join(self._routines[name].tasks)
         self.speak_dialog('describe', data={"name": name})
         self.speak(tasks)
 
@@ -258,8 +284,8 @@ class MycroftRoutineSkill(MycroftSkill):
         days = self._get_days()
         hour, minute = self._get_time()
         cronstring = self._generate_cronstring(days, hour, minute)
-        self._routines[name]['schedule'] = cronstring
-        self._routines[name]['enabled'] = True
+        self._routines[name].schedule = cronstring
+        self._routines[name].enabled = True
         self._write_routine_data()
         self._schedule_routine(name, cronstring)
         self.speak_dialog("scheduled", data={'name': name})
@@ -267,7 +293,9 @@ class MycroftRoutineSkill(MycroftSkill):
     @intent_handler(IntentBuilder("DisableRoutine").require("Disable").require("RoutineName"))
     def _disable_scheduled_routine(self, message):
         name = message.data["RoutineName"]
-        self._routines[name]['enabled'] = False
+        if not self._routines[name].enabled:
+            return
+        self._routines[name].enabled = False
         self._write_routine_data()
         self.scheduler.remove_job(self._routine_to_sched_id_map[name])
         self.speak_dialog("disabled", data={"name": name})
@@ -275,9 +303,9 @@ class MycroftRoutineSkill(MycroftSkill):
     @intent_handler(IntentBuilder("EnableRoutine").require("Enable").require("RoutineName"))
     def _enable_scheduled_routine(self, message):
         name = message.data["RoutineName"]
-        self._routines[name]['enabled'] = True
+        self._routines[name].enabled = True
         self._write_routine_data()
-        self._schedule_routine(name, self._routines[name]["schedule"])
+        self._schedule_routine(name, self._routines[name].schedule)
         self.speak_dialog("enabled", data={"name": name})
 
     def _get_days(self):
