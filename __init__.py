@@ -83,6 +83,8 @@ class MycroftRoutineSkill(MycroftSkill):
                                   self._trigger_routine)
         self.gui.register_handler("skill.mycroft_routine_skill.edit_routine_button_clicked",
                                   self._edit_routine)
+        self.gui.register_handler("skill.mycroft_routine_skill.edit_task_button_clicked",
+                                  self._edit_task)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
@@ -195,10 +197,16 @@ class MycroftRoutineSkill(MycroftSkill):
         return tasks
 
     def _edit_routine(self, message):
-        name = message.data["RoutineName"]
+        routine_name = message.data["RoutineName"]
         self.gui.clear()
-        self.gui['routineModel'] = self._routines.get(name.lower())
+        self.gui["routineName"] = routine_name
+        self.gui['routineModel'] = [json.dumps({"index": i, "name": name}) for i, name in enumerate(self._routines.get(routine_name.lower())["tasks"])]
         self.gui.show_page("edit_routine.qml")
+
+    def _edit_task(self, message):
+        routine = message.data["Routine"]
+        task = message.data["Task"]
+        self.speak("Edit task: " + str(task.get("index")) + task.get("name") + "of routine " + routine)
 
     @intent_handler(IntentBuilder("RunRoutine").optionally("Run").require("RoutineName"))
     def _trigger_routine(self, message):
