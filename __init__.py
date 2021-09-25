@@ -30,7 +30,7 @@ class _TaskStatus(Enum):
     FINISHED = 1
 
 
-class _Task():
+class _TaskTracker():
 
     def __init__(self, id):
         self._id = id
@@ -128,7 +128,7 @@ class MycroftRoutineSkill(MycroftSkill):
     def send_message(self, message: str):
         task_id = "{name}.{uuid}".format(name=self.name, uuid=uuid())
         with self._in_progress_tasks_lock:
-            self._in_progress_tasks[task_id] = _Task(task_id)
+            self._in_progress_tasks[task_id] = _TaskTracker(task_id)
         self.bus.emit(Message(
             msg_type="recognizer_loop:utterance",
             data={"utterances": [message]},
