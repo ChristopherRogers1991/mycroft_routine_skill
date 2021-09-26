@@ -300,10 +300,14 @@ class MycroftRoutineSkill(MycroftSkill):
 
     @intent_handler(IntentBuilder("DeleteRoutine").require("Delete").require("RoutineName"))
     def _delete_routine(self, message):
+        self._delete_routine_quiet(message)
+        name = message.data["RoutineName"].lower()
+        self.speak_dialog('deleted', data={"name": name})
+
+    def _delete_routine_quiet(self, message):
         name = message.data["RoutineName"].lower()
         del(self._routines[name])
         self._write_routine_data()
-        self.speak_dialog('deleted', data={"name": name})
         self._show_routines()
 
     @intent_handler(IntentBuilder("DescribeRoutine").require("Describe").require("RoutineName"))
