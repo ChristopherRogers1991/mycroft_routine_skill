@@ -100,6 +100,8 @@ class MycroftRoutineSkill(MycroftSkill):
                                   self._trigger_routine)
         self.gui.register_handler("skill.mycroft_routine_skill.edit_routine_button_clicked",
                                   self._edit_routine)
+        self.gui.register_handler("skill.mycroft_routine_skill.rename_routine_button_clicked",
+                                  self._rename_routine)
         self.gui.register_handler("skill.mycroft_routine_skill.edit_task_button_clicked",
                                   self._edit_task)
         self.gui.register_handler("skill.mycroft_routine_skill.add_task_button_clicked",
@@ -224,6 +226,21 @@ class MycroftRoutineSkill(MycroftSkill):
             tasks.append(task)
         return tasks
 
+    def _rename_routine(self, message):
+        new_name = self.get_response()
+        if not new_name:
+            return
+        if new_name in self._cancel_words:
+            return
+
+        old_name = message.data["RoutineName"].lower()
+        new_routine = _Routine(**self._routines[old_name].__dict__)
+        new_routine.name = new_name
+        self._routines[new_name] = new_routine
+        del(self._routines[old_name])
+        self._write_routine_data()
+        self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
+
     def _edit_routine(self, message):
         routine_name = message.data["RoutineName"].lower()
         self.gui.clear()
@@ -234,6 +251,8 @@ class MycroftRoutineSkill(MycroftSkill):
     def _edit_task(self, message):
         new_task = self.get_response()
         if not new_task:
+            return
+        if new_task in self._cancel_words:
             return
         routine_name = message.data["RoutineName"].lower()
         task_index = message.data["TaskIndex"]

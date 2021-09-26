@@ -39,6 +39,17 @@ Mycroft.ScrollableDelegate{
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
+            Button {
+                id: schedule
+                Layout.alignment: Qt.AlignRight
+                palette {
+                    button: "white"
+                }
+                text: "Rename"
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", {"RoutineName": modelData})
+                }
+            }
         }
     }
 }
