@@ -102,6 +102,8 @@ class MycroftRoutineSkill(MycroftSkill):
                                   self._edit_routine)
         self.gui.register_handler("skill.mycroft_routine_skill.rename_routine_button_clicked",
                                   self._rename_routine)
+        self.gui.register_handler("skill.mycroft_routine_skill.delete_routine_button_clicked",
+                                  self._delete_routine)
         self.gui.register_handler("skill.mycroft_routine_skill.edit_task_button_clicked",
                                   self._edit_task)
         self.gui.register_handler("skill.mycroft_routine_skill.add_task_button_clicked",
@@ -282,24 +284,27 @@ class MycroftRoutineSkill(MycroftSkill):
             task_id = self.send_message(task)
             self._await_completion_of_task(task_id)
 
+    def _show_routines(self):
+        self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
+        self.gui.show_page("routine_list.qml")
+
     @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
     def _list_routines(self, message):
         if not self._routines:
             self.speak_dialog('no.routines')
             return
         routines = ". ".join(self._routines.keys())
-        self.gui.clear()
-        self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
-        self.gui.show_page("routine_list.qml")
         self.speak_dialog('list.routines')
         self.speak(routines)
+        self._show_routines()
 
     @intent_handler(IntentBuilder("DeleteRoutine").require("Delete").require("RoutineName"))
     def _delete_routine(self, message):
-        name = message.data["RoutineName"]
+        name = message.data["RoutineName"].lower()
         del(self._routines[name])
         self._write_routine_data()
         self.speak_dialog('deleted', data={"name": name})
+        self._show_routines()
 
     @intent_handler(IntentBuilder("DescribeRoutine").require("Describe").require("RoutineName"))
     def _describe_routine(self, message):

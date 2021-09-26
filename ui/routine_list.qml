@@ -29,25 +29,36 @@ Mycroft.ScrollableDelegate{
                 }
             }
             Button {
-                id: edit
                 Layout.alignment: Qt.AlignRight
+                Layout.preferredWidth: 40
                 palette {
                     button: "white"
                 }
-                text: "Edit"
+                text: "E"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
             Button {
-                id: schedule
                 Layout.alignment: Qt.AlignRight
+                Layout.preferredWidth: 40
                 palette {
                     button: "white"
                 }
-                text: "Rename"
+                text: "R"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", {"RoutineName": modelData})
+                }
+            }
+            Button {
+                Layout.alignment: Qt.AlignRight
+                Layout.preferredWidth: 40
+                palette {
+                    button: "white"
+                }
+                text: "X"
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.delete_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
         }
