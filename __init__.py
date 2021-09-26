@@ -102,6 +102,8 @@ class MycroftRoutineSkill(MycroftSkill):
                                   self._edit_routine)
         self.gui.register_handler("skill.mycroft_routine_skill.edit_task_button_clicked",
                                   self._edit_task)
+        self.gui.register_handler("skill.mycroft_routine_skill.add_task_button_clicked",
+                                  self._add_task)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
@@ -236,6 +238,16 @@ class MycroftRoutineSkill(MycroftSkill):
         routine_name = message.data["RoutineName"].lower()
         task_index = message.data["TaskIndex"]
         self._routines[routine_name].tasks[task_index] = new_task
+        self.gui['tasks'] = json.dumps(self._routines[routine_name].tasks)
+        self.gui.show_page("edit_routine.qml")
+        self._write_routine_data()
+
+    def _add_task(self, message):
+        new_task = self.get_response()
+        if not new_task:
+            return
+        routine_name = message.data["RoutineName"].lower()
+        self._routines[routine_name].tasks.append(new_task)
         self.gui['tasks'] = json.dumps(self._routines[routine_name].tasks)
         self.gui.show_page("edit_routine.qml")
         self._write_routine_data()
