@@ -258,7 +258,7 @@ class MycroftRoutineSkill(MycroftSkill):
             return
         routines = ". ".join(self._routines.keys())
         self.gui.clear()
-        self.gui['routinesModel'] = [routine.title() for routine in self._routines.keys()]
+        self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
         self.gui.show_page("routine_list.qml")
         self.speak_dialog('list.routines')
         self.speak(routines)

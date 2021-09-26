@@ -6,7 +6,7 @@ import Mycroft 1.0 as Mycroft
 
 Mycroft.ScrollableDelegate{
     id: root
-    property var routinesModel: sessionData.routinesModel
+    property var routinesModel: JSON.parse(sessionData.routinesModel)
     ListView {
         id: list
         model: routinesModel
@@ -17,9 +17,9 @@ Mycroft.ScrollableDelegate{
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(600, parent.width * 0.8)
             Button {
-                anchors.right: edit.left
-                anchors.left: parent.left
-                anchors.rightMargin: 10
+                Layout.alignment: Qt.AlignLeft
+                Layout.rightMargin: 10
+                Layout.fillWidth: true
                 palette {
                     button: "white"
                 }
@@ -30,7 +30,7 @@ Mycroft.ScrollableDelegate{
             }
             Button {
                 id: edit
-                anchors.right: parent.right
+                Layout.alignment: Qt.AlignRight
                 palette {
                     button: "white"
                 }

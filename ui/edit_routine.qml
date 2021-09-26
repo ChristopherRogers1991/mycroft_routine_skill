@@ -30,9 +30,9 @@ Mycroft.ScrollableDelegate{
         id: taskComponent
         RowLayout {
             Text {
-                anchors.right: edit.left
-                anchors.left: parent.left
-                anchors.rightMargin: 10
+                Layout.alignment: Qt.AlignLeft
+                Layout.rightMargin: 10
+                Layout.fillWidth: true
                 text: task
                 font.pointSize: 20
                 font.bold: true
@@ -40,7 +40,7 @@ Mycroft.ScrollableDelegate{
             }
             Button {
                 id: edit
-                anchors.right: parent.right
+                Layout.alignment: Qt.AlignRight
                 palette {
                     button: "white"
                 }
