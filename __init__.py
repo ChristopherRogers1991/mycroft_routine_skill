@@ -285,6 +285,7 @@ class MycroftRoutineSkill(MycroftSkill):
             self._await_completion_of_task(task_id)
 
     def _show_routines(self):
+        self.gui.clear()
         self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
         self.gui.show_page("routine_list.qml")
 
