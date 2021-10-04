@@ -310,12 +310,13 @@ class MycroftRoutineSkill(MycroftSkill):
             task_id = self.send_message(task)
             self._await_completion_of_task(task_id)
 
-    def _show_routines(self):
+    @intent_handler(IntentBuilder("ShowRoutines").require("Show").require("Routines"))
+    def _show_routines(self, message):
         self.gui.clear()
         self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
         self.gui.show_page("routine_list.qml")
 
-    @intent_handler(IntentBuilder("ListRoutine").require("List").require("Routines"))
+    @intent_handler(IntentBuilder("ListRoutines").require("List").require("Routines"))
     def _list_routines(self, message):
         if not self._routines:
             self.speak_dialog('no.routines')
@@ -323,7 +324,7 @@ class MycroftRoutineSkill(MycroftSkill):
         routines = ". ".join(self._routines.keys())
         self.speak_dialog('list.routines')
         self.speak(routines)
-        self._show_routines()
+        self._show_routines(message)
 
     @intent_handler(IntentBuilder("DeleteRoutine").require("Delete").require("RoutineName"))
     def _delete_routine(self, message):
