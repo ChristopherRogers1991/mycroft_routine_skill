@@ -14,10 +14,11 @@ Mycroft.ScrollableDelegate{
         anchors.topMargin: 100
         delegate: RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: Math.min(600, parent.width * 0.8)
+            width: Math.min(800, parent.width * 0.8)
             Button {
                 Layout.alignment: Qt.AlignLeft
                 Layout.rightMargin: 10
+                Layout.preferredHeight: 50
                 Layout.fillWidth: true
                 palette {
                     button: "white"

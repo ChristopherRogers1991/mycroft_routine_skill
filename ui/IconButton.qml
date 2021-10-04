@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.4
 
 Button {
     Layout.alignment: Qt.AlignRight
-    Layout.preferredWidth: 40
-    Layout.preferredHeight: 40
+    Layout.preferredWidth: 50
+    Layout.preferredHeight: 50
     palette {
         button: "white"
     }

@@ -21,7 +21,7 @@ Mycroft.ScrollableDelegate{
         delegate: Loader {
             property var task: modelData
             anchors.horizontalCenter: parent.horizontalCenter
-            width: Math.min(600, parent.width * 0.8)
+            width: Math.min(800, parent.width * 0.8)
             sourceComponent: task == "__sentinel__" ? sentinelComponent : taskComponent
         }
     }
