@@ -38,18 +38,9 @@ Mycroft.ScrollableDelegate{
                 font.bold: true
                 color: "white"
             }
-            Button {
-                id: edit
-                Layout.alignment: Qt.AlignRight
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 40
-                palette {
-                    button: "white"
-                }
+            IconButton {
                 icon.name: "edit"
                 icon.source: "icons/pngs/mic.png"
-                icon.width: 100
-                icon.height: 100
                 icon.color: "#5C5C5C"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked",
