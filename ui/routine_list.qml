@@ -15,14 +15,10 @@ Mycroft.ScrollableDelegate{
         delegate: RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(800, parent.width * 0.8)
-            Button {
+            BaseButton {
                 Layout.alignment: Qt.AlignLeft
                 Layout.rightMargin: 10
-                Layout.preferredHeight: 50
                 Layout.fillWidth: true
-                palette {
-                    button: "white"
-                }
                 text: modelData
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.run_routine_button_clicked", {"RoutineName": modelData})

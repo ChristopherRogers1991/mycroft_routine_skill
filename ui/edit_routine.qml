@@ -98,11 +98,8 @@ Mycroft.ScrollableDelegate{
 
     Component {
         id: sentinelComponent
-        Button {
+        BaseButton {
             id: add
-            palette {
-                button: "white"
-            }
             text: "+"
             onClicked: {
                 triggerGuiEvent("skill.mycroft_routine_skill.add_task_button_clicked",
