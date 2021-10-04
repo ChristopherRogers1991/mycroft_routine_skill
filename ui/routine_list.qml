@@ -31,21 +31,15 @@ Mycroft.ScrollableDelegate{
             Button {
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
                 palette {
                     button: "white"
                 }
-                text: "E"
-                onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
-                }
-            }
-            Button {
-                Layout.alignment: Qt.AlignRight
-                Layout.preferredWidth: 40
-                palette {
-                    button: "white"
-                }
-                text: "R"
+                icon.name: "rename"
+                icon.source: "icons/pngs/mic.png"
+                icon.width: 100
+                icon.height: 100
+                icon.color: "#5C5C5C"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", {"RoutineName": modelData})
                 }
@@ -53,10 +47,31 @@ Mycroft.ScrollableDelegate{
             Button {
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
                 palette {
                     button: "white"
                 }
-                text: "X"
+                icon.name: "edit"
+                icon.source: "icons/pngs/edit.png"
+                icon.width: 100
+                icon.height: 100
+                icon.color: "#5C5C5C"
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
+                }
+            }
+            Button {
+                Layout.alignment: Qt.AlignRight
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
+                palette {
+                    button: "white"
+                }
+                icon.name: "delete"
+                icon.source: "icons/pngs/delete.png"
+                icon.width: 100
+                icon.height: 100
+                icon.color: "#5C5C5C"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.delete_routine_button_clicked", {"RoutineName": modelData})
                 }
