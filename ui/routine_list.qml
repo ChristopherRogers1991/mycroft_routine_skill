@@ -27,7 +27,6 @@ Mycroft.ScrollableDelegate{
             IconButton {
                 icon.name: "rename"
                 icon.source: "icons/pngs/mic.png"
-                icon.color: "#5C5C5C"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", {"RoutineName": modelData})
                 }
