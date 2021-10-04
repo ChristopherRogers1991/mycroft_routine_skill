@@ -10,8 +10,17 @@ Mycroft.ScrollableDelegate{
         items.push("__sentinel__")
         return items
     }
+
+    function indexList(items) {
+        var newList = []
+        for (var i = 0; i < items.length; i++) {
+            newList.push([i, items[i]])
+        }
+        return newList
+    }
+
     property var routineName: sessionData.routineName
-    property var tasks: addSentinel(JSON.parse(sessionData.tasks))
+    property var tasks: indexList(addSentinel(JSON.parse(sessionData.tasks)))
     ListView {
         id: list
         model: tasks
@@ -19,7 +28,8 @@ Mycroft.ScrollableDelegate{
         anchors.fill: parent
         anchors.topMargin: 100
         delegate: Loader {
-            property var task: modelData
+            property var task: modelData[1]
+            property var index: modelData[0]
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(800, parent.width * 0.8)
             sourceComponent: task == "__sentinel__" ? sentinelComponent : taskComponent
@@ -39,12 +49,47 @@ Mycroft.ScrollableDelegate{
                 color: "white"
             }
             IconButton {
+                id: "edit"
                 icon.name: "edit"
                 icon.source: "icons/pngs/mic.png"
                 icon.color: "#5C5C5C"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked",
-                    {"RoutineName": routineName, "TaskIndex": list.currentIndex})
+                    {"RoutineName": routineName, "TaskIndex": index})
+                }
+            }
+            IconButton {
+                id: "up"
+                icon.name: "up"
+                icon.source: "icons/pngs/up.png"
+                icon.color: "#5C5C5C"
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.move_task_button_clicked",
+                    {"RoutineName": routineName,
+                     "TaskIndex": index,
+                     "Direction": "up"})
+                }
+            }
+            IconButton {
+                id: "down"
+                icon.name: "down"
+                icon.source: "icons/pngs/down.png"
+                icon.color: "#5C5C5C"
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.move_task_button_clicked",
+                    {"RoutineName": routineName,
+                     "TaskIndex": index,
+                     "Direction": "down"})
+                }
+            }
+            IconButton {
+                id: "delete"
+                icon.name: "delete"
+                icon.source: "icons/pngs/delete.png"
+                icon.color: "#5C5C5C"
+                onClicked: {
+                    triggerGuiEvent("skill.mycroft_routine_skill.delete_task_button_clicked",
+                    {"RoutineName": routineName, "TaskIndex": index})
                 }
             }
         }

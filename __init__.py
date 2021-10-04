@@ -108,6 +108,10 @@ class MycroftRoutineSkill(MycroftSkill):
                                   self._edit_task)
         self.gui.register_handler("skill.mycroft_routine_skill.add_task_button_clicked",
                                   self._add_task)
+        self.gui.register_handler("skill.mycroft_routine_skill.move_task_button_clicked",
+                                  self._move_task)
+        self.gui.register_handler("skill.mycroft_routine_skill.delete_task_button_clicked",
+                                  self._delete_task)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
@@ -259,6 +263,28 @@ class MycroftRoutineSkill(MycroftSkill):
         routine_name = message.data["RoutineName"].lower()
         task_index = message.data["TaskIndex"]
         self._routines[routine_name].tasks[task_index] = new_task
+        self.gui['tasks'] = json.dumps(self._routines[routine_name].tasks)
+        self.gui.show_page("edit_routine.qml")
+        self._write_routine_data()
+
+    def _move_task(self, message):
+        routine_name = message.data["RoutineName"].lower()
+        task_index = message.data["TaskIndex"]
+        direction = message.data["Direction"]
+        assert direction.lower() == "up" or "down", "Direction must be 'up' or 'down'"
+        tasks = self._routines[routine_name].tasks
+        if len(tasks) <= 1:
+            return
+        offset = 1 if direction == "down" else -1
+        tasks[task_index], tasks[task_index + offset] = tasks[task_index + offset], tasks[task_index]
+        self.gui['tasks'] = json.dumps(tasks)
+        self.gui.show_page("edit_routine.qml")
+        self._write_routine_data()
+
+    def _delete_task(self, message):
+        routine_name = message.data["RoutineName"].lower()
+        task_index = message.data["TaskIndex"]
+        del(self._routines[routine_name].tasks[task_index])
         self.gui['tasks'] = json.dumps(self._routines[routine_name].tasks)
         self.gui.show_page("edit_routine.qml")
         self._write_routine_data()
