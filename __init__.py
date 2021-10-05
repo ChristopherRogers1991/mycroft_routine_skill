@@ -275,8 +275,13 @@ class MycroftRoutineSkill(MycroftSkill):
         tasks = self._routines[routine_name].tasks
         if len(tasks) <= 1:
             return
+        if task_index == 0 and direction == "up":
+            return
+        if task_index == len(tasks) - 1 and direction == "down":
+            return
         offset = 1 if direction == "down" else -1
-        tasks[task_index], tasks[task_index + offset] = tasks[task_index + offset], tasks[task_index]
+        swap_index = task_index + offset
+        tasks[task_index], tasks[swap_index] = tasks[swap_index], tasks[task_index]
         self.gui['tasks'] = json.dumps(tasks)
         self.gui.show_page("edit_routine.qml")
         self._write_routine_data()
