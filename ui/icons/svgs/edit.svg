@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5193"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="edit.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview5195"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.68011301"
+     inkscape:cx="218.34606"
+     inkscape:cy="484.4783"
+     inkscape:window-width="960"
+     inkscape:window-height="1013"
+     inkscape:window-x="960"
+     inkscape:window-y="30"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs5190" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g5135"
+       inkscape:export-filename="/home/chris/edit.svg"
+       inkscape:export-xdpi="181.42857"
+       inkscape:export-ydpi="181.42857">
+      <rect
+         style="fill:#000000;stroke-width:0.15368"
+         id="rect1656"
+         width="70"
+         height="10"
+         x="10"
+         y="30"
+         inkscape:export-filename="/home/chris/edit.png"
+         inkscape:export-xdpi="157.3326"
+         inkscape:export-ydpi="157.3326" />
+      <rect
+         style="fill:#000000;stroke-width:0.15368"
+         id="rect1656-8"
+         width="70"
+         height="10"
+         x="10"
+         y="50"
+         inkscape:export-filename="/home/chris/edit.png"
+         inkscape:export-xdpi="157.3326"
+         inkscape:export-ydpi="157.3326" />
+      <rect
+         style="fill:#000000;stroke-width:0.15368"
+         id="rect1656-7"
+         width="70"
+         height="10"
+         x="10"
+         y="10"
+         inkscape:export-filename="/home/chris/edit.png"
+         inkscape:export-xdpi="157.3326"
+         inkscape:export-ydpi="157.3326" />
+    </g>
+  </g>
+</svg>
