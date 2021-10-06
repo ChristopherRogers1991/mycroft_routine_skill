@@ -48,9 +48,11 @@ Create named rountines, which are lists of Mycroft commands, that can be run by 
 * @gras64 (German translation)
 
 
-## Short Demo
+## Short Demos
 
-https://youtu.be/71RwUTnGJbI
+Skill: https://youtu.be/71RwUTnGJbI
+
+GUI: https://youtu.be/YlHHmi-er7A
 
 ## Instalation
 
