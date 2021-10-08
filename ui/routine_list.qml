@@ -26,21 +26,21 @@ Mycroft.ScrollableDelegate{
             }
             IconButton {
                 icon.name: "rename"
-                icon.source: "icons/pngs/mic.png"
+                source: "mic"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
             IconButton {
                 icon.name: "edit"
-                icon.source: "icons/pngs/edit.png"
+                source: "edit"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
                 }
             }
             IconButton {
                 icon.name: "delete"
-                icon.source: "icons/pngs/delete.png"
+                source: "delete"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.delete_routine_button_clicked", {"RoutineName": modelData})
                 }

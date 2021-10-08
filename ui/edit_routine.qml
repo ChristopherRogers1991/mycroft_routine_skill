@@ -61,8 +61,7 @@ Mycroft.ScrollableDelegate{
             IconButton {
                 id: "up"
                 icon.name: "up"
-                icon.source: "icons/pngs/up.png"
-                icon.color: "#5C5C5C"
+                source: "up"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.move_task_button_clicked",
                     {"RoutineName": routineName,
@@ -73,8 +72,7 @@ Mycroft.ScrollableDelegate{
             IconButton {
                 id: "down"
                 icon.name: "down"
-                icon.source: "icons/pngs/down.png"
-                icon.color: "#5C5C5C"
+                source: "down"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.move_task_button_clicked",
                     {"RoutineName": routineName,
@@ -85,8 +83,7 @@ Mycroft.ScrollableDelegate{
             IconButton {
                 id: "delete"
                 icon.name: "delete"
-                icon.source: "icons/pngs/delete.png"
-                icon.color: "#5C5C5C"
+                source: "delete"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.delete_task_button_clicked",
                     {"RoutineName": routineName, "TaskIndex": index})
