@@ -29,7 +29,7 @@ ListViewWithSentinel {
                 icon.name: "edit"
                 source: "mic"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked",
+                    triggerGuiEvent("skill.mycroft_routine_skill.edit_task",
                     {"RoutineName": routineName, "TaskIndex": index})
                 }
             }
@@ -38,7 +38,7 @@ ListViewWithSentinel {
                 icon.name: "up"
                 source: "up"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.move_task_button_clicked",
+                    triggerGuiEvent("skill.mycroft_routine_skill.move_task",
                     {"RoutineName": routineName,
                      "TaskIndex": index,
                      "Direction": "up"})
@@ -49,7 +49,7 @@ ListViewWithSentinel {
                 icon.name: "down"
                 source: "down"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.move_task_button_clicked",
+                    triggerGuiEvent("skill.mycroft_routine_skill.move_task",
                     {"RoutineName": routineName,
                      "TaskIndex": index,
                      "Direction": "down"})
@@ -60,7 +60,7 @@ ListViewWithSentinel {
                 icon.name: "delete"
                 source: "delete"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.delete_task_button_clicked",
+                    triggerGuiEvent("skill.mycroft_routine_skill.delete_task",
                     {"RoutineName": routineName, "TaskIndex": index})
                 }
             }
@@ -74,7 +74,7 @@ ListViewWithSentinel {
             id: add
             text: "+"
             onClicked: {
-                triggerGuiEvent("skill.mycroft_routine_skill.add_task_button_clicked",
+                triggerGuiEvent("skill.mycroft_routine_skill.add_task",
                 {"RoutineName": routineName})
             }
         }

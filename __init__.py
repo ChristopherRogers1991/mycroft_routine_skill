@@ -96,23 +96,23 @@ class MycroftRoutineSkill(MycroftSkill):
 
         self.add_event("mycroft.skill.handler.complete",
                        self._handle_completed_event)
-        self.gui.register_handler("skill.mycroft_routine_skill.run_routine_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.run_routine",
                                   self._trigger_routine)
-        self.gui.register_handler("skill.mycroft_routine_skill.edit_routine_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.edit_routine",
                                   self._edit_routine)
-        self.gui.register_handler("skill.mycroft_routine_skill.rename_routine_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.rename_routine",
                                   self._rename_routine)
-        self.gui.register_handler("skill.mycroft_routine_skill.delete_routine_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.delete_routine",
                                   self._delete_routine)
-        self.gui.register_handler("skill.mycroft_routine_skill.edit_task_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.edit_task",
                                   self._edit_task)
-        self.gui.register_handler("skill.mycroft_routine_skill.add_task_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.add_task",
                                   self._add_task)
-        self.gui.register_handler("skill.mycroft_routine_skill.move_task_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.move_task",
                                   self._move_task)
-        self.gui.register_handler("skill.mycroft_routine_skill.delete_task_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.delete_task",
                                   self._delete_task)
-        self.gui.register_handler("skill.mycroft_routine_skill.add_routine_button_clicked",
+        self.gui.register_handler("skill.mycroft_routine_skill.add_routine",
                                   self._create_routine)
 
     def _handle_completed_event(self, message):

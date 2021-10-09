@@ -21,28 +21,28 @@ ListViewWithSentinel {
                 Layout.fillWidth: true
                 text: routine
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.run_routine_button_clicked", messageData)
+                    triggerGuiEvent("skill.mycroft_routine_skill.run_routine", messageData)
                 }
             }
             IconButton {
                 icon.name: "rename"
                 source: "mic"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", messageData)
+                    triggerGuiEvent("skill.mycroft_routine_skill.rename_routine", messageData)
                 }
             }
             IconButton {
                 icon.name: "edit"
                 source: "edit"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", messageData)
+                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine", messageData)
                 }
             }
             IconButton {
                 icon.name: "delete"
                 source: "delete"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.delete_routine_button_clicked", messageData)
+                    triggerGuiEvent("skill.mycroft_routine_skill.delete_routine", messageData)
                 }
             }
         }
@@ -54,7 +54,7 @@ ListViewWithSentinel {
             id: add
             text: "+"
             onClicked: {
-                triggerGuiEvent("skill.mycroft_routine_skill.add_routine_button_clicked", {})
+                triggerGuiEvent("skill.mycroft_routine_skill.add_routine", {})
             }
         }
     }
