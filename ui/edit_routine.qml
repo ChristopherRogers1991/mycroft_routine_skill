@@ -51,8 +51,7 @@ Mycroft.ScrollableDelegate{
             IconButton {
                 id: "edit"
                 icon.name: "edit"
-                icon.source: "icons/pngs/mic.png"
-                icon.color: "#5C5C5C"
+                source: "mic"
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.edit_task_button_clicked",
                     {"RoutineName": routineName, "TaskIndex": index})
