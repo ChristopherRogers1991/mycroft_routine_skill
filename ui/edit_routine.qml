@@ -22,7 +22,7 @@ ListViewWithSentinel {
                 Layout.fillWidth: true
                 elide: Text.ElideRight
                 font.pointSize: 20
-                font.bold: true
+                font.weight: Font.Bold
                 font.capitalization: Font.Capitalize
                 color: "white"
             }
