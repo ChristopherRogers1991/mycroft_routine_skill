@@ -4,37 +4,13 @@ import QtQuick.Layouts 1.4
 import org.kde.kirigami 2.4 as Kirigami
 import Mycroft 1.0 as Mycroft
 
-Mycroft.ScrollableDelegate{
-    id: root
-    function addSentinel(items) {
-        items.push("__sentinel__")
-        return items
-    }
-
-    function indexList(items) {
-        var newList = []
-        for (var i = 0; i < items.length; i++) {
-            newList.push([i, items[i]])
-        }
-        return newList
-    }
-
+ListViewWithSentinel {
     property var routineName: sessionData.routineName
-    property var tasks: indexList(addSentinel(JSON.parse(sessionData.tasks)))
-    ListView {
-        id: list
-        model: tasks
-        spacing: 20
-        anchors.fill: parent
-        anchors.topMargin: 100
-        delegate: Loader {
-            property var task: modelData[1]
-            property var index: modelData[0]
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: Math.min(800, parent.width * 0.8)
-            sourceComponent: task == "__sentinel__" ? sentinelComponent : taskComponent
-        }
-    }
+    property var tasks: JSON.parse(sessionData.tasks)
+
+    rowComponent: taskComponent
+    sentinelComponent: sentinelComponent
+    items: tasks
 
     Component {
         id: taskComponent
@@ -43,7 +19,7 @@ Mycroft.ScrollableDelegate{
                 Layout.alignment: Qt.AlignLeft
                 Layout.rightMargin: 10
                 Layout.fillWidth: true
-                text: task
+                text: item
                 font.pointSize: 20
                 font.bold: true
                 color: "white"
