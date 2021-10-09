@@ -320,7 +320,7 @@ class MycroftRoutineSkill(MycroftSkill):
     @intent_handler(IntentBuilder("ShowRoutines").require("Show").require("Routines"))
     def _show_routines(self, message):
         self.gui.clear()
-        self.gui['routinesModel'] = json.dumps([routine.title() for routine in self._routines.keys()])
+        self.gui['routinesModel'] = json.dumps(list(self._routines.keys()))
         self.gui.show_page("routine_list.qml")
 
     @intent_handler(IntentBuilder("ListRoutines").require("List").require("Routines"))

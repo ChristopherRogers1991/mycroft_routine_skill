@@ -15,11 +15,11 @@ ListViewWithSentinel {
         RowLayout {
             property var routine: item
             property var messageData: {"RoutineName": routine}
-            BaseButton {
+            TextButton {
                 Layout.alignment: Qt.AlignLeft
                 Layout.rightMargin: 10
                 Layout.fillWidth: true
-                text: routine
+                buttonText: routine
                 onClicked: {
                     triggerGuiEvent("skill.mycroft_routine_skill.run_routine", messageData)
                 }
@@ -50,9 +50,9 @@ ListViewWithSentinel {
 
     Component {
         id: sentinelComponent
-        BaseButton {
+        TextButton {
             id: add
-            text: "+"
+            buttonText: "+"
             onClicked: {
                 triggerGuiEvent("skill.mycroft_routine_skill.add_routine", {})
             }

@@ -22,6 +22,7 @@ ListViewWithSentinel {
                 text: item
                 font.pointSize: 20
                 font.bold: true
+                font.capitalization: Font.Capitalize
                 color: "white"
             }
             IconButton {
@@ -70,9 +71,9 @@ ListViewWithSentinel {
 
     Component {
         id: sentinelComponent
-        BaseButton {
+        TextButton {
             id: add
-            text: "+"
+            buttonText: "+"
             onClicked: {
                 triggerGuiEvent("skill.mycroft_routine_skill.add_task",
                 {"RoutineName": routineName})
