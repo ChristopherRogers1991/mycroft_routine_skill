@@ -16,10 +16,11 @@ ListViewWithSentinel {
         id: taskComponent
         RowLayout {
             Text {
+                text: item
                 Layout.alignment: Qt.AlignLeft
                 Layout.rightMargin: 10
                 Layout.fillWidth: true
-                text: item
+                elide: Text.ElideRight
                 font.pointSize: 20
                 font.bold: true
                 font.capitalization: Font.Capitalize
