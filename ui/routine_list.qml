@@ -3,47 +3,58 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 import Mycroft 1.0 as Mycroft
 
-Mycroft.ScrollableDelegate{
-    id: root
-    property var routinesModel: JSON.parse(sessionData.routinesModel)
-    ListView {
-        id: list
-        model: routinesModel
-        spacing: 20
-        anchors.fill: parent
-        anchors.topMargin: 100
-        delegate: RowLayout {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: Math.min(800, parent.width * 0.8)
+ListViewWithSentinel {
+    property var routines: JSON.parse(sessionData.routinesModel)
+
+    rowComponent: routineComponent
+    sentinelComponent: sentinelComponent
+    items: routines
+
+    Component {
+        id: routineComponent
+        RowLayout {
+            property var routine: item
+            property var messageData: {"RoutineName": routine}
             BaseButton {
                 Layout.alignment: Qt.AlignLeft
                 Layout.rightMargin: 10
                 Layout.fillWidth: true
-                text: modelData
+                text: routine
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.run_routine_button_clicked", {"RoutineName": modelData})
+                    triggerGuiEvent("skill.mycroft_routine_skill.run_routine_button_clicked", messageData)
                 }
             }
             IconButton {
                 icon.name: "rename"
                 source: "mic"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", {"RoutineName": modelData})
+                    triggerGuiEvent("skill.mycroft_routine_skill.rename_routine_button_clicked", messageData)
                 }
             }
             IconButton {
                 icon.name: "edit"
                 source: "edit"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", {"RoutineName": modelData})
+                    triggerGuiEvent("skill.mycroft_routine_skill.edit_routine_button_clicked", messageData)
                 }
             }
             IconButton {
                 icon.name: "delete"
                 source: "delete"
                 onClicked: {
-                    triggerGuiEvent("skill.mycroft_routine_skill.delete_routine_button_clicked", {"RoutineName": modelData})
+                    triggerGuiEvent("skill.mycroft_routine_skill.delete_routine_button_clicked", messageData)
                 }
+            }
+        }
+    }
+
+    Component {
+        id: sentinelComponent
+        BaseButton {
+            id: add
+            text: "+"
+            onClicked: {
+                triggerGuiEvent("skill.mycroft_routine_skill.add_routine_button_clicked", {})
             }
         }
     }

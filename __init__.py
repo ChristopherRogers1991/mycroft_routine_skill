@@ -112,6 +112,8 @@ class MycroftRoutineSkill(MycroftSkill):
                                   self._move_task)
         self.gui.register_handler("skill.mycroft_routine_skill.delete_task_button_clicked",
                                   self._delete_task)
+        self.gui.register_handler("skill.mycroft_routine_skill.add_routine_button_clicked",
+                                  self._create_routine)
 
     def _handle_completed_event(self, message):
         task_id = message.context.get("task_id")
