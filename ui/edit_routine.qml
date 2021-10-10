@@ -8,23 +8,23 @@ ListViewWithSentinel {
     property var routineName: sessionData.routineName
     property var tasks: JSON.parse(sessionData.tasks)
 
+    headerComponent: headerComponent
     rowComponent: taskComponent
     sentinelComponent: sentinelComponent
     items: tasks
 
     Component {
+        id: headerComponent
+        BaseText {
+            text: routineName
+        }
+    }
+
+    Component {
         id: taskComponent
         RowLayout {
-            Text {
+            BaseText {
                 text: item
-                Layout.alignment: Qt.AlignLeft
-                Layout.rightMargin: 10
-                Layout.fillWidth: true
-                elide: Text.ElideRight
-                font.pointSize: 20
-                font.weight: Font.Bold
-                font.capitalization: Font.Capitalize
-                color: "white"
             }
             IconButton {
                 id: "edit"

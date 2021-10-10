@@ -6,9 +6,17 @@ import Mycroft 1.0 as Mycroft
 ListViewWithSentinel {
     property var routines: JSON.parse(sessionData.routinesModel)
 
+    headerComponent: headerComponent
     rowComponent: routineComponent
     sentinelComponent: sentinelComponent
     items: routines
+
+    Component {
+        id: headerComponent
+        BaseText {
+            text: "Routines"
+        }
+    }
 
     Component {
         id: routineComponent
