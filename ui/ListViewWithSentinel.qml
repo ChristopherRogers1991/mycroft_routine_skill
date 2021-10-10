@@ -48,7 +48,7 @@ Mycroft.Delegate{
         * overlap the UI. This margin puts our components under that text, so
         * there's never any overlap.
         */
-        anchors.topMargin: 50
+        anchors.topMargin: 70
 
         Item {
             id: header
