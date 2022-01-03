@@ -343,7 +343,7 @@ class MycroftRoutineSkill(MycroftSkill):
         name = message.data["RoutineName"].lower()
         del(self._routines[name])
         self._write_routine_data()
-        self._show_routines()
+        self._show_routines(message)
 
     @intent_handler(IntentBuilder("DescribeRoutine").require("Describe").require("RoutineName"))
     def _describe_routine(self, message):
