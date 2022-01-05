@@ -73,7 +73,7 @@ GUI: https://youtu.be/YlHHmi-er7A
 
 ## Configuration
 
-If you'd like to manually edit your routines, look for `~/.mycroft/skills/MycroftRoutineSkill/routines.json`.
+If you'd like to manually edit your routines, look for `~/.config/mycroft/skills/MycroftRoutineSkill/routines2.json`.
 
 The schedules are fed to [APScheduler](https://apscheduler.readthedocs.io/en/v3.5.1/modules/triggers/cron.html)
 as a cronstring. Note that in APScheduler cronstrings, days of the week start on Monday, so 0 is Monday, and 6
