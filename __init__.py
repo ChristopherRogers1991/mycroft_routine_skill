@@ -343,7 +343,7 @@ class MycroftRoutineSkill(MycroftSkill):
         name = message.data["RoutineName"].lower()
         del(self._routines[name])
         self._write_routine_data()
-        self._show_routines()
+        self._show_routines(message)
 
     @intent_handler(IntentBuilder("DescribeRoutine").require("Describe").require("RoutineName"))
     def _describe_routine(self, message):
@@ -390,7 +390,13 @@ class MycroftRoutineSkill(MycroftSkill):
         days_from_user = days_from_user.lower()
         for i in range(len(self._days_of_week)):
             if self._days_of_week[i] in days_from_user:
-                days_to_run.append(str(i))
+                self.log.info(days_from_user+str(i))
+                if i == 7:
+                    days_to_run = ['0','1','2','3','4','5','6']
+                else:
+                    self.log.info('appending')
+                    days_to_run.append(str(i))
+        self.log.info("Days = "+str(days_to_run))
         return ','.join(days_to_run)
 
     def _get_time(self):
