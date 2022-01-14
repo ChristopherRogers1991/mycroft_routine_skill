@@ -394,9 +394,7 @@ class MycroftRoutineSkill(MycroftSkill):
                 if i == 7:
                     days_to_run = ['0','1','2','3','4','5','6']
                 else:
-                    self.log.info('appending')
                     days_to_run.append(str(i))
-        self.log.info("Days = "+str(days_to_run))
         return ','.join(days_to_run)
 
     def _get_time(self):
