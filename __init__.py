@@ -354,10 +354,16 @@ class MycroftRoutineSkill(MycroftSkill):
 
     @intent_handler(IntentBuilder("ScheduleRoutine").require("Schedule").require("RoutineName"))
     def _add_routine_schedule(self, message):
-        name = message.data["RoutineName"]
-        days = self._get_days()
-        hour, minute = self._get_time()
-        cronstring = self._generate_cronstring(days, hour, minute)
+        name = message.data["RoutineName"] 
+        try:
+            days = self._get_days()
+            hour, minute = self._get_time()
+            if days == None:
+                # self.speak_dialog("unknown.day")
+                return
+            cronstring = self._generate_cronstring(days, hour, minute)
+        except:
+            return
         self._routines[name].schedule = cronstring
         self._routines[name].enabled = True
         self._write_routine_data()
@@ -390,10 +396,9 @@ class MycroftRoutineSkill(MycroftSkill):
         days_from_user = days_from_user.lower()
         for i in range(len(self._days_of_week)):
             if self._days_of_week[i] in days_from_user:
-                self.log.info(days_from_user+str(i))
-                if i == 7:
+                if (i >= 7) and (len(days_to_run)==0) :
                     days_to_run = ['0','1','2','3','4','5','6']
-                else:
+                elif i < 7:
                     days_to_run.append(str(i))
         return ','.join(days_to_run)
 
