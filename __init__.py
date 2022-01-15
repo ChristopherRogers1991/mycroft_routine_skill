@@ -358,8 +358,8 @@ class MycroftRoutineSkill(MycroftSkill):
         try:
             days = self._get_days()
             hour, minute = self._get_time()
-            if days == None:
-                # self.speak_dialog("unknown.day")
+            if days == None or len(days)==0: 
+                self.speak_dialog("unknown.day")
                 return
             cronstring = self._generate_cronstring(days, hour, minute)
         except:
