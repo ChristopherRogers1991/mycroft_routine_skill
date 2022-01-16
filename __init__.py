@@ -389,7 +389,7 @@ class MycroftRoutineSkill(MycroftSkill):
         days_to_run = []
         days_from_user = self.get_response('which.days')
         if not days_from_user:
-            self.speak_dialog('unknown_day')
+            self.speak_dialog('unknown.day')
             raise ValueError("No day spoken")
         days_from_user = days_from_user.lower()
         for i in range(len(self._days_of_week)):
