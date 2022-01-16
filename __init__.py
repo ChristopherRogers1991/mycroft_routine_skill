@@ -358,12 +358,9 @@ class MycroftRoutineSkill(MycroftSkill):
         try:
             days = self._get_days()
             hour, minute = self._get_time()
-            if days == None or len(days)==0: 
-                self.speak_dialog("unknown.day")
-                return
-            cronstring = self._generate_cronstring(days, hour, minute)
-        except:
-            return
+        except ValueError:
+            return # A local language message has already been spoken if we get a ValueError
+        cronstring = self._generate_cronstring(days, hour, minute)
         self._routines[name].schedule = cronstring
         self._routines[name].enabled = True
         self._write_routine_data()
@@ -392,7 +389,8 @@ class MycroftRoutineSkill(MycroftSkill):
         days_to_run = []
         days_from_user = self.get_response('which.days')
         if not days_from_user:
-            return
+            self.speak_dialog('unknown_day')
+            raise ValueError("No day spoken")
         days_from_user = days_from_user.lower()
         for i in range(len(self._days_of_week)):
             if self._days_of_week[i] in days_from_user:
@@ -400,19 +398,25 @@ class MycroftRoutineSkill(MycroftSkill):
                     days_to_run = ['0','1','2','3','4','5','6']
                 elif i < 7:
                     days_to_run.append(str(i))
+        self.log.info(days_to_run)
+        if len(days_to_run)==0:
+            self.speak_dialog('unknown.day')
+            raise ValueError("Not a valid day");
         return ','.join(days_to_run)
 
     def _get_time(self):
         regex = '(?P<hour>[0-9]{1,2})[: ](?P<minute>[0-9]{1,2}) (?P<time_of_day>[ap].?m.?)'
         time_from_user = self.get_response('what.time')
         if not time_from_user:
-            return
+            self.speak_dialog('could.not.parse.time')
+            raise ValueError("No time spoken")
+
         time_from_user = time_from_user.lower()
         matches = re.match(regex, time_from_user)
 
         if not matches:
             self.speak_dialog('could.not.parse.time')
-            return
+            raise ValueError("Not a time we could parse")
 
         matches = matches.groupdict()
         hour = int(matches['hour'])
